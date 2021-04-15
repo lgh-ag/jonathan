@@ -10,7 +10,7 @@
     <p id="countdown_main">80 Woche(n), 50 Tag(e), 50 Stunde(n), 90 Minute(n), 187 Sekunde(n)</p>
     <h3>bis zu den Osterferien! 📅</h3>
     <br>
-    <table class="table table-hover" border="">
+    <table class="table table-hover" border="4px">
       <thead>
         <tr>
           <td>
@@ -33,7 +33,7 @@
             <p>30.02.2021</p>
           </td>
           <td>
-            <p>89.13.-8000</p>
+            <p>89.13.8000</p>
           </td>
         </tr>
         <tr>
@@ -61,10 +61,89 @@
       </tbody>
     </table>
     <a href="https://github.com/lgh-ag/lghag.de"><h3>Hier findest du noch mehr Kagge die wir "programmiert" haben. Also eigentlich ist das ja kein "Code" sondern eher ne "Designsprache" also praktisch PowerPoint. xD Lost wer das liest.</h3></a>
+
     <script>
+      var json = '[{"start":"2022-02-12T00:00Z","end":"2022-02-20T00:00Z","year":2022,"stateCode":"TH","name":"winterferien","slug":"winterferien-2022-TH"},{"start":"2022-04-11T00:00Z","end":"2022-04-24T00:00Z","year":2022,"stateCode":"TH","name":"osterferien","slug":"osterferien-2022-TH"},{"start":"2022-05-27T00:00Z","end":"2022-05-28T00:00Z","year":2022,"stateCode":"TH","name":"pfingstferien","slug":"pfingstferien-2022-TH"},{"start":"2022-07-18T00:00Z","end":"2022-08-28T00:00Z","year":2022,"stateCode":"TH","name":"sommerferien","slug":"sommerferien-2022-TH"},{"start":"2022-10-17T00:00Z","end":"2022-10-30T00:00Z","year":2022,"stateCode":"TH","name":"herbstferien","slug":"herbstferien-2022-TH"},{"start":"2022-12-22T00:00Z","end":"2023-01-04T00:00Z","year":2022,"stateCode":"TH","name":"weihnachtsferien","slug":"weihnachtsferien-2022-TH"}]';
+      const obj = JSON.parse(json);
+      console.log(obj[0].end);
+      
+      function msToTime(s){
+      var millis  = s % 1000;
+          seconds = Math.floor(s / 1000),
+          minutes = Math.floor(seconds / 60),
+          hours   = Math.floor(minutes / 60),
+          days    = Math.floor(hours / 24),
+          months  = Math.floor(days / 30),
+          years   = Math.floor(days / 365);
+
+      seconds %= 60;
+      minutes %= 60;
+      hours %= 24;
+      days %= 30;
+      months %= 12;
+
+      if (years == 0) {
+        var returnYear = '';
+      }
+      else {
+        var returnYear = 'Jahre: ' + years
+      }
+
+      if (months == 0) {
+        var returnMonth = '';
+      }
+      else {
+        var returnMonth = ' Monate: ' + months
+      }
+
+      if (days == 0) {
+        var returnDay = '';
+      }
+      else {
+        var returnDay = ' Tage: ' + days
+      }
+
+      if (hours == 0) {
+        var returnHour = '';
+      }
+      else {
+        var returnHour = ' Stunden: ' + hours
+      }
+      
+      if (minutes == 0) {
+        var returnMinute = '';
+      }
+      else {
+        var returnMinute = ' Minuten: ' + minutes
+      }
+      
+      if (seconds == 0) {
+        var returnSecond = '';
+      }
+      else {
+        var returnSecond = ' Sekunden: ' + seconds
+      }
+      
+      if (millis == 0) {
+        var returnMilli = '';
+      }
+      else {
+        var returnMilli = ' Millisekunden: ' + millis
+      }
+      
+      return returnYear + returnMonth + returnDay + returnHour + returnMinute + returnSecond + returnMilli;
+      }
+
+
+
       function getSeconds() {
-        document.getElementById("countdown_main").innerHTML = new Date().getSeconds();
-        setTimeout(getSeconds, 1000);
+        var ferienDate = Date.parse(obj[0].start);
+        var currentDate = Date.now();
+        s = ferienDate - currentDate
+        finalDate = msToTime(s);
+        
+        document.getElementById("countdown_main").innerHTML = finalDate;
+        setTimeout(getSeconds, 20);
       }
 
       getSeconds();

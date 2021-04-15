@@ -8,7 +8,7 @@
     <!--LOGIN user:yougot pass:jebaited-->
     <h1>FeRiEn CoUnTEr - funktioniert auf "jeden" Fall</h1>
     <p id="countdown_main">80 Woche(n), 50 Tag(e), 50 Stunde(n), 90 Minute(n), 187 Sekunde(n)</p>
-    <h3>bis zu den Osterferien! 📅</h3>
+    <h3 id="FerienArt">bis zu den Osterferien! 📅</h3>
     <br>
     <table class="table table-hover" border="4px">
       <thead>
@@ -143,6 +143,7 @@
         finalDate = msToTime(s);
         
         document.getElementById("countdown_main").innerHTML = finalDate;
+        document.getElementById("FerienArt").innerHTML = 'bis zu den ' + obj[0].name + '! 📅' ;
         setTimeout(getSeconds, 20);
       }
 

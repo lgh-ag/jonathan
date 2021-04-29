@@ -2,6 +2,7 @@
   <head>
     <title>FeRiEn CoUnTEr</title>
     <link rel="stylesheet" href="https://bootswatch.com/4/sketchy/bootstrap.css">
+    
   </head>
   <body>
     <!-- HAHAHAHAHA SCAM SEITE DO NOT GO HYRDRAUF -->
@@ -74,13 +75,17 @@
     </table>
     <a href="https://github.com/lgh-ag/lghag.de"><h3>Hier findest du noch mehr Kagge die wir "programmiert" haben. Also eigentlich ist das ja kein "Code" sondern eher ne "Designsprache" also praktisch PowerPoint. xD Lost wer das liest.</h3></a>
 
+    <script src="https://cdn.jsdelivr.net/npm/underscore@latest/underscore-umd-min.js"></script>
     <script>
         var json = "";
         var obj = null;
+        var ferienDate = null;
 
         function reqListener () {
             json = this.responseText;
             obj = JSON.parse(json);
+
+            selectChange();
             getSeconds();
       
         }
@@ -168,24 +173,30 @@
 
 
       function getSeconds() {
-        var ferienDate = Date.parse(obj[1].start);
+        
+        
         var currentDate = Date.now();
         s = ferienDate - currentDate;
         finalDate = msToTime(s);
         
         document.getElementById("countdown_main").innerHTML = finalDate;
-        document.getElementById("FerienArt").innerHTML = 'bis zu den ' + obj[1].name + '! 📅' ;
         setTimeout(getSeconds, 20);
       }
 
-      function selectChange() {
-        console.log(select.value);
-      }
-
       var select = document.getElementById("auswahl-swibel");
+
+      function selectChange() {
+        ferienDate = Date.parse(_.where(obj, {"slug" : select.value})[0].start);
+        document.getElementById("FerienArt").innerHTML = 'bis zu den ' + _.where(obj, {"slug" : select.value})[0].name + '! 📅' ;
+      }
+      
+
       select.onchange = selectChange;
 
       
+
+
+
     </script>
   </body>
 </html>

@@ -8,8 +8,8 @@
     <!-- HAHAHAHAHA SCAM SEITE DO NOT GO HYRDRAUF -->
     <!--LOGIN user:yougot pass:jebaited-->
     <h1>FeRiEn CoUnTEr - funktioniert auf "jeden" Fall</h1>
-    <p id="countdown_main">80 Woche(n), 50 Tag(e), 50 Stunde(n), 90 Minute(n), 187 Sekunde(n)</p>
-    <h3 id="FerienArt">bis zu den Osterferien! 📅</h3>
+    <p id="countdown_main">löding.-...</p>
+    <h3 id="FerienArt">loading.....-_-...</h3>
     <br>
     <p>Welches FFerien willst du sen?</p>
     <select class="btn btn-primary" id="auswahl-swibel">
@@ -91,18 +91,11 @@
         }
 
         var oReq = new XMLHttpRequest();
-           oReq.addEventListener("load", reqListener);
-           oReq.open("GET", "https://lgh-ag-cors.herokuapp.com/https://ferien-api.de/api/v1/holidays/TH/2022");
+            oReq.addEventListener("load", reqListener);
+            oReq.open("GET", "https://lgh-ag-cors.herokuapp.com/https://ferien-api.de/api/v1/holidays/TH/2022");
             oReq.setRequestHeader("x-requested-with", "lghag.de");
-           oReq.send();
+            oReq.send();
 
-      /*console.log(obj[0].end);*/
-
-
-
-
-
-      
       function msToTime(s){
       var millis  = s % 1000;
           seconds = Math.floor(s / 1000),
@@ -187,16 +180,10 @@
 
       function selectChange() {
         ferienDate = Date.parse(_.where(obj, {"slug" : select.value})[0].start);
-        document.getElementById("FerienArt").innerHTML = 'bis zu den ' + _.where(obj, {"slug" : select.value})[0].name + '! 📅' ;
+        var ferien = _.where(obj, {"slug" : select.value})[0].name;
+        document.getElementById("FerienArt").innerHTML = 'bis zu den ' + ferien.slice(0, 1).toUpperCase() + ferien.slice(1) + '! 📅 2022' ;
       }
-      
-
       select.onchange = selectChange;
-
-      
-
-
-
     </script>
   </body>
 </html>

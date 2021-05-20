@@ -23,7 +23,7 @@
     <br>
     <br>
     <br>
-    <table class="table table-hover" border="4px">
+    <table id="ferientabelle" class="table table-hover" border="4px">
       <thead>
         <tr>
           <td>
@@ -37,43 +37,8 @@
           </td>
         </tr>
       </thead>
-      <tbody>
-        <tr>
-          <td>
-            <p>Osterferien</p>
-          </td>
-          <td>
-            <p>30.02.2021</p>
-          </td>
-          <td>
-            <p>89.13.8000</p>
-          </td>
-        </tr>
-        <tr>
-          <td>
-            <p>Sommerferien</p>
-          </td>
-          <td>
-            <p>01.06.2021</p>
-          </td>
-          <td>
-            <p>02.06.2021</p>
-          </td>
-        </tr>
-        <tr>
-          <td>
-            <p>Herbstferien</p>
-          </td>
-          <td>
-            <p>03.06.2021</p>
-          </td>
-          <td>
-            <p>04.06.2021</p>
-          </td>
-        </tr>
-      </tbody>
     </table>
-    <a href="https://github.com/lgh-ag/lghag.de"><h3>Hier findest du noch mehr Kagge die wir "programmiert" haben. Also eigentlich ist das ja kein "Code" sondern eher ne "Designsprache" also praktisch PowerPoint. xD Lost wer das liest.</h3></a>
+    <a href="https://github.com/lgh-ag/lghag.de"><p>Hier findest du noch mehr Kagge die wir "programmiert" haben. Also eigentlich ist das ja kein "Code" sondern eher ne "Designsprache" also praktisch PowerPoint. xD Lost wer das liest.</p></a>
 
     <script src="https://cdn.jsdelivr.net/npm/underscore@latest/underscore-umd-min.js"></script>
     <script>
@@ -81,20 +46,19 @@
         var obj = null;
         var ferienDate = null;
 
-        function reqListener () {
+      function reqListener () {
             json = this.responseText;
             obj = JSON.parse(json);
-
             selectChange();
             getSeconds();
-      
-        }
+            tabbalulga();
+      }
 
-        var oReq = new XMLHttpRequest();
-            oReq.addEventListener("load", reqListener);
-            oReq.open("GET", "https://lgh-ag-cors.herokuapp.com/https://ferien-api.de/api/v1/holidays/TH/2022");
-            oReq.setRequestHeader("x-requested-with", "lghag.de");
-            oReq.send();
+      var oReq = new XMLHttpRequest();
+          oReq.addEventListener("load", reqListener);
+          oReq.open("GET", "https://lgh-ag-cors.herokuapp.com/https://ferien-api.de/api/v1/holidays/TH/2022");
+          oReq.setRequestHeader("x-requested-with", "lghag.de");
+          oReq.send();
 
       function msToTime(s){
       var millis  = s % 1000;
@@ -104,86 +68,91 @@
           days    = Math.floor(hours / 24),
           months  = Math.floor(days / 30),
           years   = Math.floor(days / 365);
-
       seconds %= 60;
       minutes %= 60;
       hours %= 24;
       days %= 30;
       months %= 12;
-
       if (years == 0) {
         var returnYear = '';
       }
       else {
         var returnYear = 'Jahre: ' + years;
       }
-
       if (months == 0) {
         var returnMonth = '';
       }
       else {
         var returnMonth = ' Monate: ' + months;
       }
-
       if (days == 0) {
         var returnDay = '';
       }
       else {
         var returnDay = ' Tage: ' + days;
       }
-
       if (hours == 0) {
         var returnHour = '';
       }
       else {
         var returnHour = ' Stunden: ' + hours;
       }
-      
       if (minutes == 0) {
         var returnMinute = '';
       }
       else {
         var returnMinute = ' Minuten: ' + minutes;
       }
-      
       if (seconds == 0) {
         var returnSecond = '';
       }
       else {
         var returnSecond = ' Sekunden: ' + seconds;
       }
-      
       if (millis == 0) {
         var returnMilli = '';
       }
       else {
         var returnMilli = ' Millisekunden: ' + millis;
       }
-      
       return returnYear + returnMonth + returnDay + returnHour + returnMinute + returnSecond + returnMilli;
       }
 
-
-
       function getSeconds() {
-        
-        
         var currentDate = Date.now();
         s = ferienDate - currentDate;
         finalDate = msToTime(s);
-        
         document.getElementById("countdown_main").innerHTML = finalDate;
         setTimeout(getSeconds, 20);
       }
 
       var select = document.getElementById("auswahl-swibel");
 
+      select.onchange = selectChange;
       function selectChange() {
         ferienDate = Date.parse(_.where(obj, {"slug" : select.value})[0].start);
         var ferien = _.where(obj, {"slug" : select.value})[0].name;
         document.getElementById("FerienArt").innerHTML = 'bis zu den ' + ferien.slice(0, 1).toUpperCase() + ferien.slice(1) + '! 📅 2022' ;
       }
-      select.onchange = selectChange;
+
+      function tabbalulga() {
+        var i;
+        for (i = 0; i < obj.length; i++) {
+          tabbaluga(i + 1, obj[i].name, obj[i].start, obj[i].end);
+        }
+        
+      }
+      
+      function tabbaluga(targetrow ,cell1text, cell2text, cell3text) {
+        var table = document.getElementById("ferientabelle");
+        var row = table.insertRow(targetrow);
+        var cell1 = row.insertCell(0);
+        var cell2 = row.insertCell(1);
+        var cell3 = row.insertCell(2);
+        cell1.innerHTML = cell1text;
+        cell2.innerHTML = cell2text;
+        cell3.innerHTML = cell3text;
+      }
     </script>
   </body>
 </html>

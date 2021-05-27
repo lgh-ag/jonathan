@@ -2,28 +2,27 @@
   <head>
     <title>FeRiEn CoUnTEr</title>
     <link rel="stylesheet" href="https://bootswatch.com/4/sketchy/bootstrap.css">
-    
   </head>
   <body>
     <!-- HAHAHAHAHA SCAM SEITE DO NOT GO HYRDRAUF -->
     <!--LOGIN user:yougot pass:jebaited-->
     <h1>FeRiEn CoUnTEr - funktioniert auf "jeden" Fall</h1>
-    <p id="countdown_main">löding.-...</p>
-    <h3 id="FerienArt">loading.....-_-...</h3>
+    <p id="ferienCounter">löding.-...</p>
+    <h3 id="ferienArt">loading.....-_-...</h3>
     <br>
     <p>Welches FFerien willst du sen?</p>
-    <select class="btn btn-primary" id="auswahl-swibel">
-      <option value="winterferien-2022-TH">Winterferien</option>
-      <option value="osterferien-2022-TH">Osterferien</option>
-      <option value="pfingstferien-2022-TH">Pfingstferien</option>
-      <option value="sommerferien-2022-TH">Sommerferien</option>
-      <option value="herbstferien-2022-TH">Herbstferien</option>
-      <option value="weihnachtsferien-2022-TH">Weihnachtsferien</option>
+    <select id="ferienAuswahl" >
+      <option value="winterferien-">Winterferien</option>
+      <option value="osterferien-">Osterferien</option>
+      <option value="pfingstferien-">Pfingstferien</option>
+      <option value="sommerferien-">Sommerferien</option>
+      <option value="herbstferien-">Herbstferien</option>
+      <option value="weihnachtsferien-">Weihnachtsferien</option>
     </select>
     <br>
     <br>
     <br>
-    <table id="ferientabelle" class="table table-hover" border="4px">
+    <table id="datenTabelle" class="table table-hover" border="4px">
       <thead>
         <tr>
           <td>
@@ -37,122 +36,86 @@
           </td>
         </tr>
       </thead>
+      <tbody>
+      </tbody>
     </table>
-    <a href="https://github.com/lgh-ag/lghag.de"><p>Hier findest du noch mehr Kagge die wir "programmiert" haben. Also eigentlich ist das ja kein "Code" sondern eher ne "Designsprache" also praktisch PowerPoint. xD Lost wer das liest.</p></a>
+    <a href="https://github.com/lgh-ag/lghag.de">Hier findest du noch mehr Kagge die wir "programmiert" haben. Also eigentlich ist das ja kein "Code" sondern eher ne "Designsprache" also praktisch PowerPoint. xD Lost wer das liest.</a>
 
     <script src="https://cdn.jsdelivr.net/npm/underscore@latest/underscore-umd-min.js"></script>
-    <script>
-        var json = "";
-        var obj = null;
-        var ferienDate = null;
 
-      function reqListener () {
-            json = this.responseText;
-            obj = JSON.parse(json);
-            selectChange();
-            getSeconds();
-            tabbalulga();
+    <script>
+      var json = "";
+      var obj = null;
+      var ferienDate = null;
+
+      function reqListener() {
+        json = this.responseText;
+        obj = JSON.parse(json);
+
+        selectChange();
+        getSeconds();
+        tabelleDatenHolen();
       }
 
       var oReq = new XMLHttpRequest();
-          oReq.addEventListener("load", reqListener);
-          oReq.open("GET", "https://lgh-ag-cors.herokuapp.com/https://ferien-api.de/api/v1/holidays/TH/2022");
-          oReq.setRequestHeader("x-requested-with", "lghag.de");
-          oReq.send();
-
-      function msToTime(s){
-      var millis  = s % 1000;
-          seconds = Math.floor(s / 1000),
-          minutes = Math.floor(seconds / 60),
-          hours   = Math.floor(minutes / 60),
-          days    = Math.floor(hours / 24),
-          months  = Math.floor(days / 30),
-          years   = Math.floor(days / 365);
-      seconds %= 60;
-      minutes %= 60;
-      hours %= 24;
-      days %= 30;
-      months %= 12;
-      if (years == 0) {
-        var returnYear = '';
-      }
-      else {
-        var returnYear = 'Jahre: ' + years;
-      }
-      if (months == 0) {
-        var returnMonth = '';
-      }
-      else {
-        var returnMonth = ' Monate: ' + months;
-      }
-      if (days == 0) {
-        var returnDay = '';
-      }
-      else {
-        var returnDay = ' Tage: ' + days;
-      }
-      if (hours == 0) {
-        var returnHour = '';
-      }
-      else {
-        var returnHour = ' Stunden: ' + hours;
-      }
-      if (minutes == 0) {
-        var returnMinute = '';
-      }
-      else {
-        var returnMinute = ' Minuten: ' + minutes;
-      }
-      if (seconds == 0) {
-        var returnSecond = '';
-      }
-      else {
-        var returnSecond = ' Sekunden: ' + seconds;
-      }
-      if (millis == 0) {
-        var returnMilli = '';
-      }
-      else {
-        var returnMilli = ' Millisekunden: ' + millis;
-      }
-      return returnYear + returnMonth + returnDay + returnHour + returnMinute + returnSecond + returnMilli;
-      }
+      oReq.addEventListener("load", reqListener);
+      oReq.open("GET", "https://lgh-ag-cors.herokuapp.com/https://ferien-api.de/api/v1/holidays/TH/" + new Date().getFullYear());
+      oReq.setRequestHeader("x-requested-with", "lghag.de");
+      oReq.send();
 
       function getSeconds() {
         var currentDate = Date.now();
-        s = ferienDate - currentDate;
-        finalDate = msToTime(s);
-        document.getElementById("countdown_main").innerHTML = finalDate;
-        setTimeout(getSeconds, 20);
+
+        var milli = ferienDate - currentDate;
+        var abgezogen = 0;
+
+        var wochen = Math.floor(milli / 1000 / 60 / 60 / 24 / 7);
+        abgezogen = abgezogen + wochen * 1000 * 60 * 60 * 24 * 7;
+
+        var tage = Math.floor((milli - abgezogen) / 1000 / 60 / 60 / 24);
+        abgezogen = abgezogen + tage * 1000 * 60 * 60 * 24;
+
+        var stunden = Math.floor((milli - abgezogen) / 1000 / 60 / 60);
+        abgezogen = abgezogen + stunden * 1000 * 60 * 60;
+
+        var minuten = Math.floor((milli - abgezogen) / 1000 / 60);
+        abgezogen = abgezogen + minuten * 1000 * 60;
+
+        var sekunden = Math.floor((milli - abgezogen) / 1000);
+
+        document.getElementById("ferienCounter").innerText = "Das sind : " + wochen +  " Wochen, " + tage + " Tage, " + stunden + " Stunden, " + minuten + " Minuten und " + sekunden + " Sekunden";
+        setTimeout(getSeconds, 1000);
       }
 
-      var select = document.getElementById("auswahl-swibel");
+      var select = document.getElementById("ferienAuswahl");
 
-      select.onchange = selectChange;
       function selectChange() {
-        ferienDate = Date.parse(_.where(obj, {"slug" : select.value})[0].start);
-        var ferien = _.where(obj, {"slug" : select.value})[0].name;
-        document.getElementById("FerienArt").innerHTML = 'bis zu den ' + ferien.slice(0, 1).toUpperCase() + ferien.slice(1) + '! 📅 2022' ;
-      }
-
-      function tabbalulga() {
-        var i;
-        for (i = 0; i < obj.length; i++) {
-          tabbaluga(i + 1, obj[i].name, obj[i].start, obj[i].end);
-        }
-        
+        ferienDate = Date.parse(_.where(obj, {"slug": select.value + new Date().getFullYear() + "-TH"})[0].start);
+        var ferien = _.where(obj, {"slug": select.value + new Date().getFullYear() + "-TH"})[0].name;
+        document.getElementById("ferienArt").innerHTML = "bis zu den " + ferien.slice(0, 1).toUpperCase() + ferien.slice(1) + "! 📅";
+        getSeconds();
       }
       
-      function tabbaluga(targetrow ,cell1text, cell2text, cell3text) {
-        var table = document.getElementById("ferientabelle");
-        var row = table.insertRow(targetrow);
+
+      select.onchange = selectChange;
+
+      function tabelleDatenHolen() {
+        var i;
+        for (i = 0; i < obj.length; i++) {
+          tabelleAusfuellen(i + 1, obj[i].name, new Date(obj[i].start), new Date(obj[i].end));
+        }
+      }
+
+      function tabelleAusfuellen(targetRow, cell1text, cell2text, cell3text) {
+        var table = document.getElementById("datenTabelle");
+        var row = table.insertRow(targetRow);
         var cell1 = row.insertCell(0);
         var cell2 = row.insertCell(1);
         var cell3 = row.insertCell(2);
-        cell1.innerHTML = cell1text;
-        cell2.innerHTML = cell2text;
-        cell3.innerHTML = cell3text;
+        cell1.innerHTML = cell1text.slice(0, 1).toUpperCase() + cell1text.slice(1);
+        cell2.innerHTML = cell2text.getDate() + "." + cell2text.getMonth() + "." + cell2text.getFullYear();
+        cell3.innerHTML = cell3text.getDate() + "." + cell3text.getMonth() + "." + cell3text.getFullYear();
       }
     </script>
   </body>
-</html>
+</html> 
